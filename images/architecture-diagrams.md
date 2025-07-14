@@ -96,60 +96,60 @@ graph TB
 ## 2. AWS 서비스 간 연결 관계 상세 다이어그램
 
 ```mermaid
-graph LR
+graph TB
     subgraph "Data Ingestion"
-        S3_Raw[Amazon S3<br/>Raw Data Storage<br/>• CSV, JSON, Parquet files<br/>• Partitioned by date<br/>• Lifecycle policies]
+        S3_Raw[Amazon S3<br/>Raw Data Storage<br/>CSV JSON Parquet files<br/>Partitioned by date<br/>Lifecycle policies]
     end
     
-    subgraph "Schema Discovery & Cataloging"
-        Crawler[AWS Glue Crawler<br/>• Automatic schema detection<br/>• Scheduled runs<br/>• Data format recognition]
+    subgraph "Schema Discovery"
+        Crawler[AWS Glue Crawler<br/>Automatic schema detection<br/>Scheduled runs<br/>Data format recognition]
         
-        Catalog[AWS Glue Data Catalog<br/>• Table definitions<br/>• Schema versions<br/>• Partition information<br/>• Data lineage]
+        Catalog[AWS Glue Data Catalog<br/>Table definitions<br/>Schema versions<br/>Partition information<br/>Data lineage]
     end
     
     subgraph "Data Transformation"
-        ETL[AWS Glue ETL Jobs<br/>• PySpark scripts<br/>• Data cleaning<br/>• Format conversion<br/>• Data validation]
+        ETL[AWS Glue ETL Jobs<br/>PySpark scripts<br/>Data cleaning<br/>Format conversion<br/>Data validation]
         
-        Studio[AWS Glue Studio<br/>• Visual ETL designer<br/>• Drag-and-drop interface<br/>• Code generation<br/>• Job monitoring]
+        Studio[AWS Glue Studio<br/>Visual ETL designer<br/>Drag and drop interface<br/>Code generation<br/>Job monitoring]
     end
     
-    subgraph "Processed Data Storage"
-        S3_Processed[Amazon S3<br/>Processed Data Storage<br/>• Optimized formats (Parquet)<br/>• Compressed data<br/>• Analytics-ready structure]
+    subgraph "Processed Storage"
+        S3_Processed[Amazon S3<br/>Processed Data Storage<br/>Optimized formats Parquet<br/>Compressed data<br/>Analytics ready structure]
     end
     
-    subgraph "Query & Analytics"
-        Athena[Amazon Athena<br/>• Serverless SQL queries<br/>• Pay-per-query pricing<br/>• Integration with BI tools<br/>• Result caching]
+    subgraph "Query Analytics"
+        Athena[Amazon Athena<br/>Serverless SQL queries<br/>Pay per query pricing<br/>Integration with BI tools<br/>Result caching]
     end
     
-    subgraph "Security & Governance"
-        IAM[AWS IAM<br/>• Service roles<br/>• User policies<br/>• Resource-based policies<br/>• Cross-service permissions]
+    subgraph "Security Governance"
+        IAM[AWS IAM<br/>Service roles<br/>User policies<br/>Resource based policies<br/>Cross service permissions]
         
-        CloudTrail[AWS CloudTrail<br/>• API call logging<br/>• Audit trail<br/>• Compliance monitoring]
+        CloudTrail[AWS CloudTrail<br/>API call logging<br/>Audit trail<br/>Compliance monitoring]
     end
     
     %% Primary Data Flow
-    S3_Raw -->|Scan & Analyze| Crawler
-    Crawler -->|Create/Update Tables| Catalog
-    Catalog -->|Schema Information| ETL
-    Catalog -->|Schema Information| Studio
-    ETL -->|Transformed Data| S3_Processed
-    Studio -->|Visual ETL Jobs| S3_Processed
-    S3_Processed -->|Query Data| Athena
-    Catalog -->|Table Metadata| Athena
+    S3_Raw --> Crawler
+    Crawler --> Catalog
+    Catalog --> ETL
+    Catalog --> Studio
+    ETL --> S3_Processed
+    Studio --> S3_Processed
+    S3_Processed --> Athena
+    Catalog --> Athena
     
-    %% Security & Governance Flow
-    IAM -.->|Permissions| S3_Raw
-    IAM -.->|Permissions| Crawler
-    IAM -.->|Permissions| Catalog
-    IAM -.->|Permissions| ETL
-    IAM -.->|Permissions| Studio
-    IAM -.->|Permissions| S3_Processed
-    IAM -.->|Permissions| Athena
+    %% Security Flow
+    IAM -.-> S3_Raw
+    IAM -.-> Crawler
+    IAM -.-> Catalog
+    IAM -.-> ETL
+    IAM -.-> Studio
+    IAM -.-> S3_Processed
+    IAM -.-> Athena
     
-    CloudTrail -.->|Monitor| S3_Raw
-    CloudTrail -.->|Monitor| Crawler
-    CloudTrail -.->|Monitor| ETL
-    CloudTrail -.->|Monitor| Athena
+    CloudTrail -.-> S3_Raw
+    CloudTrail -.-> Crawler
+    CloudTrail -.-> ETL
+    CloudTrail -.-> Athena
     
     %% Styling
     classDef storage fill:#e3f2fd
@@ -278,25 +278,25 @@ flowchart TD
 graph TB
     subgraph "비용 효율적인 데이터 파이프라인 설계"
         subgraph "Storage Optimization"
-            A[S3 Intelligent Tiering<br/>• 자동 계층 이동<br/>• 비용 최적화<br/>• 액세스 패턴 기반]
-            B[Data Compression<br/>• Parquet 형식 사용<br/>• GZIP/Snappy 압축<br/>• 스토리지 비용 절감]
-            C[Partitioning Strategy<br/>• 날짜별 파티셔닝<br/>• 쿼리 성능 향상<br/>• 스캔 데이터 최소화]
+            A[S3 Intelligent Tiering<br/>자동 계층 이동<br/>비용 최적화<br/>액세스 패턴 기반]
+            B[Data Compression<br/>Parquet 형식 사용<br/>GZIP Snappy 압축<br/>스토리지 비용 절감]
+            C[Partitioning Strategy<br/>날짜별 파티셔닝<br/>쿼리 성능 향상<br/>스캔 데이터 최소화]
         end
         
         subgraph "Processing Optimization"
-            D[Glue Job Sizing<br/>• 적절한 DPU 설정<br/>• 작업 크기에 맞는 리소스<br/>• 실행 시간 최적화]
-            E[Crawler Scheduling<br/>• 필요시에만 실행<br/>• 스케줄링 최적화<br/>• 불필요한 실행 방지]
+            D[Glue Job Sizing<br/>적절한 DPU 설정<br/>작업 크기에 맞는 리소스<br/>실행 시간 최적화]
+            E[Crawler Scheduling<br/>필요시에만 실행<br/>스케줄링 최적화<br/>불필요한 실행 방지]
         end
         
         subgraph "Query Optimization"
-            F[Athena Query Optimization<br/>• 파티션 프루닝<br/>• 컬럼 선택 최적화<br/>• 결과 캐싱 활용]
-            G[Result Location<br/>• 쿼리 결과 S3 위치<br/>• 생명주기 정책 적용<br/>• 자동 정리 설정]
+            F[Athena Query Optimization<br/>파티션 프루닝<br/>컬럼 선택 최적화<br/>결과 캐싱 활용]
+            G[Result Location<br/>쿼리 결과 S3 위치<br/>생명주기 정책 적용<br/>자동 정리 설정]
         end
     end
     
     subgraph "모니터링 및 알림"
-        H[CloudWatch Metrics<br/>• 비용 모니터링<br/>• 사용량 추적<br/>• 임계값 알림]
-        I[Cost Explorer<br/>• 비용 분석<br/>• 예산 설정<br/>• 비용 예측]
+        H[CloudWatch Metrics<br/>비용 모니터링<br/>사용량 추적<br/>임계값 알림]
+        I[Cost Explorer<br/>비용 분석<br/>예산 설정<br/>비용 예측]
     end
     
     A --> B
